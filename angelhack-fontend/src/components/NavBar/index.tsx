@@ -38,9 +38,9 @@ const NavBar = () => {
     <>
       <Navbar isBlurred={false}>
         <NavbarBrand>
-          <Link href="/" className="font-bold text-black">
-            <p className="font-bold text-inherit">Iter</p>
-          </Link>
+        <Link href="/">
+          <img src="images/iterLogo.svg" alt="Iter Logo" className="h-14 w-auto" />
+        </Link>
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>

@@ -22,30 +22,45 @@ const admin = require("firebase-admin");
 
 admin.initializeApp();
 
-// Cloud Function to get total number of transactions
 exports.getUsers = onRequest(
   {
     region: "asia-southeast1",
   },
   async (request, response) => {
-    if (request.get("Authorization") !== "angelhack") {
-      response.status(403).send("Unauthorized");
-      logger.log("Unauthorized");
-      return;
-    }
-
     try {
       const usersRef = admin.firestore().collection("users");
       const snapshot = await usersRef.get();
+      const users = [];
 
       snapshot.forEach((doc) => {
-        const users = doc.data();
+        users.push({ id: doc.id, ...doc.data() });
       });
 
-      response.json({});
+      // Fetch subcollections for each user
+      await Promise.all(
+        users.map(async (user) => {
+          const { id } = user;
+          const userRef = usersRef.doc(id);
+          const subcollections = await userRef.listCollections();
+
+          await Promise.all(
+            subcollections.map(async (subcollection) => {
+              const subcollectionName = subcollection.id;
+              const subcollectionDocsSnapshot = await subcollection.get();
+              const subcollectionDocuments = [];
+              subcollectionDocsSnapshot.forEach((doc) => {
+                subcollectionDocuments.push({ id: doc.id, ...doc.data() });
+              });
+              user[subcollectionName] = subcollectionDocuments;
+            })
+          );
+        })
+      );
+
+      response.json({ users });
     } catch (error) {
       console.error("Error retrieving users:", error);
-      response.status(500).send(error);
+      response.status(500).send("error fetching users");
     }
   }
 );

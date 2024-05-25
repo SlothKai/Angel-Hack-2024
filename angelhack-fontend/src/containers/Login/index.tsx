@@ -3,8 +3,7 @@ import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/router";
 import { auth } from "../../../lib/firebase";
-import { useAuth } from '../../context/AuthContext';
-
+import { getAuth, setPersistence, signInWithEmailAndPassword, browserSessionPersistence } from "firebase/auth";
 
 const LoginContainer = () => {
   const [email, setEmail] = useState<string>("");
@@ -12,7 +11,6 @@ const LoginContainer = () => {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { login } = useAuth();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -20,7 +18,21 @@ const LoginContainer = () => {
     setError("");
 
     try {
-      await login(email, password);
+        const auth = getAuth();
+  setPersistence(auth, browserSessionPersistence)
+    .then(() => {
+      // Existing and future Auth states are now persisted in the current
+      // session only. Closing the window would clear any existing state even
+      // if a user forgets to sign out.
+      // ...
+      // New sign-in will be persisted with session persistence.
+      return signInWithEmailAndPassword(auth, email, password);
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    });
       router.push("/");
     } catch (error) {
       setError((error as Error).message);

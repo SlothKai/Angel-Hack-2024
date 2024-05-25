@@ -7,20 +7,30 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 
-import { useAuth } from '../../context/AuthContext';
 import { useRouter } from 'next/router';
+import { User, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useEffect, useState } from "react";
 
 const NavBar = () => {
 
-  const { currentUser, logout } = useAuth();
   const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<User|null>(null);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const handleLogout = async () => {
+    const auth = getAuth();
     try {
-      await logout();
-      router.push('/');
+      await signOut(auth);
+      router.push('/login');
     } catch (error) {
-      console.error("Error logging out:", error);
+      console.error('Error signing out: ', error);
     }
   };
 
@@ -54,7 +64,7 @@ const NavBar = () => {
             <>
               <NavbarItem className="flex items-center">
                 <img
-                  src={currentUser.photoURL || "https://c.ndtvimg.com/2024-04/2885brr4_kim-jong-un_625x300_11_April_24.jpeg"}
+                  src={currentUser.photoURL || "https://via.placeholder.com/150"}
                   alt="Profile"
                   className="w-8 h-8 rounded-full"
                 />

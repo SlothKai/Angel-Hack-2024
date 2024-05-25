@@ -1,14 +1,5 @@
 import { Button, Card, CardBody, CardHeader, Link } from "@nextui-org/react";
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Image,
-  Link,
-} from "@nextui-org/react";
 import React from "react";
-import Image from "next/image";
 
 export interface OppCardsProps {
   id: string;

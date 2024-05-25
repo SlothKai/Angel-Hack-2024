@@ -1,6 +1,10 @@
 // lib/firebase.js
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { collection, doc, setDoc, getDocs } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmBt_FDAgfiohNZg_tjLQgX2P8EA-APfg",
@@ -14,10 +18,11 @@ const firebaseConfig = {
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 } else {
   firebase.app(); // if already initialized, use that one
 }
 
 const auth = firebase.auth();
 
-export { auth };
+export { auth, firebase, db };

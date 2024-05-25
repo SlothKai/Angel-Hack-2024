@@ -11,6 +11,7 @@ const NavBar = () => {
   return (
     <>
       <Navbar shouldHideOnScroll>
+        {/* <Navbar shouldHideOnScroll> */}
         <NavbarBrand>
           {/* <AcmeLogo /> */}
           <Link href="/" className="font-bold text-black">

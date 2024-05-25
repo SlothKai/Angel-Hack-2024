@@ -29,7 +29,6 @@ interface Opportunity {
   category: string;
 }
 
-
 const InfoPage = () => {
   const router = useRouter();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
@@ -69,10 +68,15 @@ const InfoPage = () => {
   const rows = [
     {
       key: "date",
-      date: moment(opportunity.datetimeStart.toDate()).format('MMMM Do YYYY'),
-      time: moment(opportunity.datetimeStart.toDate()).format('h:mm a') + " to " + moment(opportunity.datetimeEnd.toDate()).format('h:mm a'),
+      date: moment(opportunity.datetimeStart.toDate()).format("MMMM Do YYYY"),
+      time:
+        moment(opportunity.datetimeStart.toDate()).format("h:mm a") +
+        " to " +
+        moment(opportunity.datetimeEnd.toDate()).format("h:mm a"),
       location: opportunity.venue,
-      register_open: moment(opportunity.datetimeStart.toDate()).format('MMMM Do YYYY'),
+      register_open: moment(opportunity.datetimeStart.toDate()).format(
+        "MMMM Do YYYY"
+      ),
     },
   ];
 
@@ -91,11 +95,10 @@ const InfoPage = () => {
     },
     {
       key: "register_open",
-      label: "REGISTRATION OPENS",
+      label: "REGISTRATION",
     },
   ];
 
-  
   return (
     <>
       <div className="space-y-8 flex flex-col justify-center">
@@ -117,14 +120,16 @@ const InfoPage = () => {
             <p className="md:text-4xl text-3xl font-bold text-slate-900">
               {opportunity.name}
             </p>
-            <p className="text-slate-400 font-mono">{opportunity.company} | {opportunity.category}</p>
+            <p className="text-slate-400 font-mono">
+              {opportunity.company} | {opportunity.category}
+            </p>
           </div>
           <p className="uppercase text-slate-700 font-semibold">
-            {moment(opportunity.datetimeStart.toDate()).format('MMMM Do YYYY')} - {moment(opportunity.datetimeEnd.toDate()).format('MMMM Do YYYY')}
+            {moment(opportunity.datetimeStart.toDate()).format("MMMM Do YYYY")}{" "}
+            - {moment(opportunity.datetimeEnd.toDate()).format("MMMM Do YYYY")}
           </p>
         </div>
 
-      
         <div>
           <p className="text-3xl font-bold pb-2 text-slate-700">About</p>
           <p className="ml-1 border-l-3 outline-offset-3 px-4 border-slate-700">

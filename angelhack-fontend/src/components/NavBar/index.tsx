@@ -12,8 +12,6 @@ import { User, getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { auth } from "../../../lib/firebase";
 
-
-
 const NavBar = () => {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -45,17 +43,7 @@ const NavBar = () => {
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>
             <Link color="foreground" href="#">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive>
-            <Link href="#" aria-current="page">
-              Customers
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
+              Opportunities
             </Link>
           </NavbarItem>
         </NavbarContent>
@@ -63,12 +51,16 @@ const NavBar = () => {
           {currentUser ? (
             <>
               <NavbarItem className="flex items-center">
-                <img
-                  
-                  src={currentUser.photoURL || "https://i.pravatar.cc/150?u=a04258114e29026708c"}
-                  alt="Profile"
-                  className="w-8 h-8 rounded-full"
-                />
+                <Link href="/profile">
+                  <img
+                    src={
+                      currentUser.photoURL ||
+                      "https://i.pravatar.cc/150?u=a04258114e29026708c"
+                    }
+                    alt="Profile"
+                    className="w-8 h-8 rounded-full"
+                  />
+                </Link>
               </NavbarItem>
               <NavbarItem>
                 <Button onClick={handleLogout} color="primary" variant="flat">
@@ -78,7 +70,7 @@ const NavBar = () => {
             </>
           ) : (
             <>
-              <NavbarItem className="hidden lg:flex">
+              <NavbarItem className="flex">
                 <Link href="/login">Login</Link>
               </NavbarItem>
               <NavbarItem>

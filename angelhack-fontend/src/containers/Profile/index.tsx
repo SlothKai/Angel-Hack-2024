@@ -129,7 +129,7 @@ const ProfileContainer = ({
           isBordered={true}
         />
 
-        <div className="flex  items-center">
+        <div className="flex items-center">
           <div className="flex flex-col justify-center">
             <h1 className="text-xl font-bold">{name}</h1>
             <p className="font-mono text-slate-700">{title}</p>

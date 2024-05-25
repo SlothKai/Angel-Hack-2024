@@ -7,17 +7,16 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 
-import { useRouter } from 'next/router';
-import { User, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { useRouter } from "next/router";
+import { User, getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { auth } from "../../../lib/firebase";
 
 const NavBar = () => {
-
   const router = useRouter();
-  const [currentUser, setCurrentUser] = useState<User|null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
     });
@@ -25,12 +24,11 @@ const NavBar = () => {
   }, []);
 
   const handleLogout = async () => {
-    const auth = getAuth();
     try {
       await signOut(auth);
-      router.push('/login');
+      router.push("/login");
     } catch (error) {
-      console.error('Error signing out: ', error);
+      console.error("Error signing out: ", error);
     }
   };
 
@@ -64,7 +62,9 @@ const NavBar = () => {
             <>
               <NavbarItem className="flex items-center">
                 <img
-                  src={currentUser.photoURL || "https://via.placeholder.com/150"}
+                  src={
+                    currentUser.photoURL || "https://via.placeholder.com/150"
+                  }
                   alt="Profile"
                   className="w-8 h-8 rounded-full"
                 />

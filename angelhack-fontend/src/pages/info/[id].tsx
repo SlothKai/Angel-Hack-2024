@@ -11,49 +11,99 @@ import {
 } from "@nextui-org/react";
 import clsx from "clsx";
 import { useRouter } from "next/router";
+import { db, auth, firebase } from "../../../lib/firebase";
+import { collection, doc, setDoc, getDocs, getDoc } from "firebase/firestore";
+import moment from "moment";
+import { useEffect, useState } from "react";
 
-const rows = [
-  {
-    key: "date",
-    date: "8 June 2024",
-    time: "8.00am to 11.00am",
-    location:
-      "Sungei Buloh Wetland Reserve (Please meet at the Visitor Center)",
-    register_open: "1 May 2024",
-  },
-];
+// Define the structure of your Firestore documents
+interface Opportunity {
+  name: string;
+  datetimeStart: firebase.firestore.Timestamp;
+  datetimeEnd: firebase.firestore.Timestamp;
+  venue: string;
+  registrationOpen: firebase.firestore.Timestamp;
+  image: string;
+  organizer: string;
+  description: string;
+}
 
-const columns = [
-  {
-    key: "date",
-    label: "DATE",
-  },
-  {
-    key: "time",
-    label: "TIME",
-  },
-  {
-    key: "location",
-    label: "LOCATION",
-  },
-  {
-    key: "register_open",
-    label: "REGISTRATION OPENS",
-  },
-];
 
 const InfoPage = () => {
   const router = useRouter();
+  const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (router.query.id) {
+      const getOpportunity = async () => {
+        try {
+          const docRef = doc(db, "opportunities", router.query.id as string);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            setOpportunity(docSnap.data() as Opportunity);
+          } else {
+            console.log("No such document!");
+          }
+        } catch (error) {
+          console.error("Error fetching document:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      getOpportunity();
+    }
+  }, [router.query.id]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!opportunity) {
+    return <div>No data found</div>;
+  }
+
+  const rows = [
+    {
+      key: "date",
+      date: moment(opportunity.datetimeStart.toDate()).format('MMMM Do YYYY'),
+      time: moment(opportunity.datetimeStart.toDate()).format('h:mm a') + " to " + moment(opportunity.datetimeEnd.toDate()).format('h:mm a'),
+      location: opportunity.venue,
+      register_open: moment(opportunity.datetimeStart.toDate()).format('MMMM Do YYYY'),
+    },
+  ];
+
+  const columns = [
+    {
+      key: "date",
+      label: "DATE",
+    },
+    {
+      key: "time",
+      label: "TIME",
+    },
+    {
+      key: "location",
+      label: "LOCATION",
+    },
+    {
+      key: "register_open",
+      label: "REGISTRATION OPENS",
+    },
+  ];
+
+  
   return (
     <>
-      <p>Post: {router.query.id}</p>
       <div className="space-y-8 flex flex-col justify-center">
         <div className="mx-auto shadow-xl">
           <Image
-            src="https://www.volunteer.gov.sg/images/default-source/opportunity/9c8e85de-d0ba-4999-9cb5-5013c0f34f9e.jpg?Status=Master&sfvrsn=4e2d8906_1"
+            src={opportunity.image}
             width={700}
             height={300}
-            alt="Green Earth Initiative"
+            alt={opportunity.name}
           />
         </div>
 
@@ -64,82 +114,19 @@ const InfoPage = () => {
         >
           <div>
             <p className="md:text-4xl text-3xl font-bold text-slate-900">
-              Green Earth Initiative
+              {opportunity.name}
             </p>
-            <p className="text-slate-600 font-mono">Youth Corps Singapore</p>
+            <p className="text-slate-600 font-mono">{opportunity.organizer}</p>
           </div>
           <p className="uppercase text-slate-700 font-semibold">
-            15 Mar 2024 - 20 Apr 2024
+            {moment(opportunity.datetimeStart.toDate()).format('MMMM Do YYYY')} - {moment(opportunity.datetimeEnd.toDate()).format('MMMM Do YYYY')}
           </p>
         </div>
 
         <div>
           <p className="text-3xl font-bold pb-2 text-slate-700">About</p>
           <p className="ml-1 border-l-3 outline-offset-3 px-4 border-slate-700">
-            Are you ready to combine your love for photography with a passion
-            for the environment? Organised to commemorate World Environment Day
-            2024, join us on a captivating journey! Date: 8 June (Saturday)
-            Time: 8.00am to 11.00am Location: Sungei Buloh Wetland Reserve
-            (Please meet at the Visitor Center) What’s in Store for You? 🌿Learn
-            the Basics of Mobile Photography: Whether you're a beginner or an
-            enthusiast, enhance your photography skills with your mobile phone,
-            capturing the serene beauty of nature. 🌿Unwind and Relax: Take a
-            break from the hustle and bustle. Let the tranquil surroundings of
-            the wetland soothe your soul. 🌿Environmental Appreciation: Engage
-            in insightful discussions on biodiversity and learn why it's crucial
-            to protect our natural world. Let’s come together to appreciate the
-            wonders of our environment and learn how we can contribute to its
-            preservation. Spaces are limited, so don’t miss out on this unique
-            adventure specially brought to you by Youth Corps Singapore
-            Sustainability Cluster. See you there! 🌱 Are you ready to combine
-            your love for photography with a passion for the environment?
-            Organised to commemorate World Environment Day 2024, join us on a
-            captivating journey! Date: 8 June (Saturday) Time: 8.00am to 11.00am
-            Location: Sungei Buloh Wetland Reserve (Please meet at the Visitor
-            Center) What’s in Store for You? 🌿Learn the Basics of Mobile
-            Photography: Whether you're a beginner or an enthusiast, enhance
-            your photography skills with your mobile phone, capturing the serene
-            beauty of nature. 🌿Unwind and Relax: Take a break from the hustle
-            and bustle. Let the tranquil surroundings of the wetland soothe your
-            soul. 🌿Environmental Appreciation: Engage in insightful discussions
-            on biodiversity and learn why it's crucial to protect our natural
-            world. Let’s come together to appreciate the wonders of our
-            environment and learn how we can contribute to its preservation.
-            Spaces are limited, so don’t miss out on this unique adventure
-            specially brought to you by Youth Corps Singapore Sustainability
-            Cluster. See you there! 🌱 Are you ready to combine your love for
-            photography with a passion for the environment? Organised to
-            commemorate World Environment Day 2024, join us on a captivating
-            journey! Date: 8 June (Saturday) Time: 8.00am to 11.00am Location:
-            Sungei Buloh Wetland Reserve (Please meet at the Visitor Center)
-            What’s in Store for You? 🌿Learn the Basics of Mobile Photography:
-            Whether you're a beginner or an enthusiast, enhance your photography
-            skills with your mobile phone, capturing the serene beauty of
-            nature. 🌿Unwind and Relax: Take a break from the hustle and bustle.
-            Let the tranquil surroundings of the wetland soothe your soul.
-            🌿Environmental Appreciation: Engage in insightful discussions on
-            biodiversity and learn why it's crucial to protect our natural
-            world. Let’s come together to appreciate the wonders of our
-            environment and learn how we can contribute to its preservation.
-            Spaces are limited, so don’t miss out on this unique adventure
-            specially brought to you by Youth Corps Singapore Sustainability
-            Cluster. See you there! 🌱 Are you ready to combine your love for
-            photography with a passion for the environment? Organised to
-            commemorate World Environment Day 2024, join us on a captivating
-            journey! Date: 8 June (Saturday) Time: 8.00am to 11.00am Location:
-            Sungei Buloh Wetland Reserve (Please meet at the Visitor Center)
-            What’s in Store for You? 🌿Learn the Basics of Mobile Photography:
-            Whether you're a beginner or an enthusiast, enhance your photography
-            skills with your mobile phone, capturing the serene beauty of
-            nature. 🌿Unwind and Relax: Take a break from the hustle and bustle.
-            Let the tranquil surroundings of the wetland soothe your soul.
-            🌿Environmental Appreciation: Engage in insightful discussions on
-            biodiversity and learn why it's crucial to protect our natural
-            world. Let’s come together to appreciate the wonders of our
-            environment and learn how we can contribute to its preservation.
-            Spaces are limited, so don’t miss out on this unique adventure
-            specially brought to you by Youth Corps Singapore Sustainability
-            Cluster. See you there! 🌱
+            {opportunity.description}
           </p>
         </div>
 

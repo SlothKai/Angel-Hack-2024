@@ -30,20 +30,20 @@ body {
   /* max-width: 48rem; */
   /* margin: auto; */
   /* --slide-height: 19rem; */
-  /* --slide-size: 20%; */
-  --slide-size: 50%;
+  --slide-size: 85%;
+  /* --slide-size: 50%; */
   --slide-spacing: 1rem;
 }
 
-@media (min-width: 643px) {
+@media (min-width: 820px) {
   .embla {
-    --slide-size: 30%;
+    --slide-size: 33%;
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 820px) {
   .embla {
-    --slide-size: 20%;
+    --slide-size: 30%;
   }
 }
 

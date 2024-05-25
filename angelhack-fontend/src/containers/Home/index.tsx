@@ -1,16 +1,15 @@
-import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
-import Link from "next/link";
-import { Image } from "@nextui-org/react";
-import { EmblaOptionsType } from "embla-carousel";
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
-import { useCallback, useEffect, useState } from "react";
+import { useDotButton } from "@/components/Carousel/CarouselDots";
 import OppCards, { OppCardsProps } from "@/components/OppCards";
 import { FlipWords } from "@/components/ui/flip-words";
-import { DotButton, useDotButton } from "@/components/Carousel/CarouselDots";
-import { db, auth, firebase } from "../../../lib/firebase";
-import { collection, doc, setDoc, getDocs } from "firebase/firestore";
+import { Image } from "@nextui-org/react";
+import { EmblaOptionsType } from "embla-carousel";
+import Autoplay from "embla-carousel-autoplay";
+import useEmblaCarousel from "embla-carousel-react";
+import { collection, getDocs } from "firebase/firestore";
 import moment from "moment";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
+import { db } from "../../../lib/firebase";
 
 const HomePage = () => {
   const OPTIONS: EmblaOptionsType = {
@@ -35,29 +34,31 @@ const HomePage = () => {
 
   const [cardData, setCardData] = useState<OppCardsProps[]>([]);
 
-    const getQuerySnapshot = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "opportunities"));
-        const data = querySnapshot.docs.map(doc => ({
-          title: doc.get('name'),
-          date: moment(doc.get('datetimeStart').toDate()).format('MMMM Do YYYY, h:mm:ss a'),
-          address: doc.get('venue'),
-          image: doc.get('image'),
-          id: doc.id,
-        })) as OppCardsProps[];
-        setCardData(data);
-      } catch (error) {
-        console.error("Error fetching opportunities: ", error);
-      }
-    };
-  
-    useEffect(() => {
-      getQuerySnapshot();
-    }, []);
-  
-    if (cardData.length === 0) {
-      return <div>Loading...</div>;
+  const getQuerySnapshot = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "opportunities"));
+      const data = querySnapshot.docs.map((doc) => ({
+        title: doc.get("name"),
+        date: moment(doc.get("datetimeStart").toDate()).format(
+          "MMMM Do YYYY, h:mm:ss a"
+        ),
+        address: doc.get("venue"),
+        image: doc.get("image"),
+        id: doc.id,
+      })) as OppCardsProps[];
+      setCardData(data);
+    } catch (error) {
+      console.error("Error fetching opportunities: ", error);
     }
+  };
+
+  useEffect(() => {
+    getQuerySnapshot();
+  }, []);
+
+  if (cardData.length === 0) {
+    return <div>Loading...</div>;
+  }
 
   const words = ["Volunteering,", "Helping,", "Supporting,"];
 
@@ -67,10 +68,10 @@ const HomePage = () => {
         <div className="flex items-center gap-6 lg:grid-cols-2 lg:gap-10">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-              {/* <FlipWords words={words} />
-                <br />
-                gamified. */}
-              Volunteering, gamified.
+              <FlipWords words={words} />
+              <br />
+              gamified.
+              {/* Volunteering, gamified. */}
             </h1>
             <p className="max-w-[600px] text-gray-500 md:text-xl lg:text-base xl:text-xl">
               Discover how you can make a difference in your community by
@@ -103,8 +104,7 @@ const HomePage = () => {
           <div className="embla">
             <div className="embla__viewport p-4" ref={emblaRef}>
               <div className="embla__container">
-               
-              {cardData.map((card) => (
+                {cardData.map((card) => (
                   <div className="embla__slide flex" key={card.id}>
                     <OppCards {...card} />
                   </div>

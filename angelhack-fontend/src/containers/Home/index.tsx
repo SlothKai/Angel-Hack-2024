@@ -105,7 +105,7 @@ const HomePage = () => {
             <div className="embla__viewport p-4" ref={emblaRef}>
               <div className="embla__container">
                 {cardData.map((card) => (
-                  <div className="embla__slide flex" key={card.id}>
+                  <div className="embla__slide px-[250px]" key={card.id}>
                     <OppCards {...card} />
                   </div>
                 ))}

@@ -27,24 +27,12 @@ body {
 }
 
 .embla {
-  /* max-width: 48rem; */
-  /* margin: auto; */
+  /* max-width: 235rem; */
+  margin: auto;
   /* --slide-height: 19rem; */
-  --slide-size: 85%;
+  --slide-size: 235px;
   /* --slide-size: 50%; */
-  --slide-spacing: 1rem;
-}
-
-@media (min-width: 820px) {
-  .embla {
-    --slide-size: 33%;
-  }
-}
-
-@media (min-width: 820px) {
-  .embla {
-    --slide-size: 30%;
-  }
+  /* --slide-spacing: 64px; */
 }
 
 .embla__viewport {

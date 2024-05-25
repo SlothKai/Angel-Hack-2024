@@ -10,7 +10,7 @@ import {
 const NavBar = () => {
   return (
     <>
-      <Navbar shouldHideOnScroll>
+      <Navbar isBlurred={false}>
         {/* <Navbar shouldHideOnScroll> */}
         <NavbarBrand>
           {/* <AcmeLogo /> */}

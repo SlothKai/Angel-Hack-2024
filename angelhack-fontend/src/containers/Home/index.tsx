@@ -34,18 +34,18 @@ const HomePage = () => {
   // const querySnapshot = await getDocs(collection(db, "opportunities"));
   const [cardData, setCardData] = useState();
 
-  const getQuerySnapshot = async () => {
-    const querySnapshot = await getDocs(collection(db, "opportunities"));
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
-      // setCardData(doc.data())
-    });
-  };
+  // const getQuerySnapshot = async () => {
+  //   const querySnapshot = await getDocs(collection(db, "opportunities"));
+  //   querySnapshot.forEach((doc) => {
+  //     // doc.data() is never undefined for query doc snapshots
+  //     console.log(doc.id, " => ", doc.data());
+  //     // setCardData(doc.data())
+  //   });
+  // };
 
-  const initData = useEffect(() => {
-    const res = getQuerySnapshot();
-  }, []);
+  // const initData = useEffect(() => {
+  //   const res = getQuerySnapshot();
+  // }, []);
 
   // const testData: OppCardsProps[] = [
   //   {

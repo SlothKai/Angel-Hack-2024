@@ -11,7 +11,7 @@ interface PageConfigProps {
 const PageConfig: React.FC<PageConfigProps> = ({ children }) => {
   return (
     <div className="min-h-[calc(100vh-64px-32px)]">
-      <div className="mt-8 px-8 max-w-7xl mx-auto">{children}</div>
+      <div className="mt-8 px-8 max-w-7xl mx-auto pb-96">{children}</div>
     </div>
   );
 };

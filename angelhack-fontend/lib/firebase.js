@@ -5,7 +5,6 @@ import "firebase/compat/firestore";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-
 const firebaseConfig = {
   apiKey: "AIzaSyAmBt_FDAgfiohNZg_tjLQgX2P8EA-APfg",
   authDomain: "angelhack-6978c.firebaseapp.com",
@@ -19,7 +18,7 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 // if (!firebase.apps.length) {
 //   app = firebase.initializeApp(firebaseConfig);
-  
+
 // } else {
 //   firebase.app(); // if already initialized, use that one
 // }

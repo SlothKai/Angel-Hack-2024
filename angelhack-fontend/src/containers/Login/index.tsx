@@ -3,6 +3,8 @@ import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/router";
 import { auth } from "../../../lib/firebase";
+import { useAuth } from '../../context/AuthContext';
+
 
 const LoginContainer = () => {
   const [email, setEmail] = useState<string>("");
@@ -10,6 +12,7 @@ const LoginContainer = () => {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -17,7 +20,7 @@ const LoginContainer = () => {
     setError("");
 
     try {
-      await auth.signInWithEmailAndPassword(email, password);
+      await login(email, password);
       router.push("/");
     } catch (error) {
       setError((error as Error).message);

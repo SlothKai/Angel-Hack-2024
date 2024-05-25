@@ -3,6 +3,7 @@ import NavBar from "@/components/NavBar";
 import "@/styles/globals.css";
 import { NextUIProvider } from "@nextui-org/react";
 import type { AppProps } from "next/app";
+import { AuthProvider } from "../context/AuthContext";
 import React from "react";
 
 interface PageConfigProps {

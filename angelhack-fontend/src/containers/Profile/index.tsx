@@ -104,16 +104,19 @@ const ProfileContainer = ({
       name: "Wildlife Warrior",
       description: "Conservation and wildlife protection",
       obtained: true,
+      image: "images/Wildlife Warrior.webp"
     },
     {
       name: "Guardian of Nature",
       description: "Climate Change Mitigation and Adaptation",
       obtained: true,
+      image: "images/Guardian of Nature.webp"
     },
     {
       name: "Hydro Hero",
       description: "Complete 5 water-related challenges to obtain this badge!",
       obtained: false,
+      image: "images/Hydro Hero.webp"
     },
   ];
 
@@ -146,6 +149,7 @@ const ProfileContainer = ({
                 name={badge.name}
                 description={badge.description}
                 obtained={badge.obtained}
+                image={badge.image}
               />
             </React.Fragment>
           ))}

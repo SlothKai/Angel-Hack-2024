@@ -26,7 +26,7 @@ const SignUpContainer = () => {
   };
 
   return (
-    <section className="flex items-center justify-center min-h-screen bg-gray-100">
+    <section className="flex items-center justify-center">
       <div className="container max-w-md p-8 bg-white rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold text-center mb-6">Register</h1>
         <form onSubmit={handleSubmit}>

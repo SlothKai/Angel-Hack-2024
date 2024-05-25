@@ -8,7 +8,9 @@ import { useCallback, useEffect, useState } from "react";
 import OppCards, { OppCardsProps } from "@/components/OppCards";
 import { FlipWords } from "@/components/ui/flip-words";
 import { DotButton, useDotButton } from "@/components/Carousel/CarouselDots";
-import { db, auth } from "../../../lib/firebase";
+import { db, auth, firebase } from "../../../lib/firebase";
+import { collection, doc, setDoc, getDocs } from "firebase/firestore";
+import moment from "moment";
 
 const HomePage = () => {
   const OPTIONS: EmblaOptionsType = {
@@ -31,73 +33,32 @@ const HomePage = () => {
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi);
 
-  // const querySnapshot = await getDocs(collection(db, "opportunities"));
-  const [cardData, setCardData] = useState();
+  const [cardData, setCardData] = useState<OppCardsProps[]>([]);
 
-  // const getQuerySnapshot = async () => {
-  //   const querySnapshot = await getDocs(collection(db, "opportunities"));
-  //   querySnapshot.forEach((doc) => {
-  //     // doc.data() is never undefined for query doc snapshots
-  //     console.log(doc.id, " => ", doc.data());
-  //     // setCardData(doc.data())
-  //   });
-  // };
+  const getQuerySnapshot = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "opportunities"));
+      const data = querySnapshot.docs.map((doc) => ({
+        title: doc.get("name"),
+        date: moment(doc.get("datetimeStart").toDate()).format(
+          "MMMM Do YYYY, h:mm:ss a"
+        ),
+        address: doc.get("venue"),
+        image: doc.get("image"),
+      })) as OppCardsProps[];
+      setCardData(data);
+    } catch (error) {
+      console.error("Error fetching opportunities: ", error);
+    }
+  };
 
-  // const initData = useEffect(() => {
-  //   const res = getQuerySnapshot();
-  // }, []);
+  useEffect(() => {
+    getQuerySnapshot();
+  }, []);
 
-  // const testData: OppCardsProps[] = [
-  //   {
-  //     title: "Community Link Volunteer",
-  //     date: "01 Jan 2022 - 31 Dec 2030",
-  //     address: "512 Thomson Road MSF Building Singapore 298136",
-  //     image: "https://nextui.org/images/hero-card-complete.jpeg",
-  //   },
-  //   {
-  //     title: "Project Sort It Out",
-  //     date: "22 Jun 2024 - 14 Jul 2024",
-  //     address:
-  //       "60 Jurong West Central 3 #01-01 The Frontier Community Club Singapore 648346",
-  //     image: "https://nextui.org/images/hero-card-complete.jpeg",
-  //   },
-  //   {
-  //     title: "Hearts Connect @ SAS",
-  //     date: "06 Jun 2024 - 31 Jul 2024",
-  //     address: "512 Thomson Road MSF Building Singapore 298136",
-  //     image: "https://nextui.org/images/hero-card-complete.jpeg",
-  //   },
-  //   {
-  //     title: "Green Earth Initiative",
-  //     date: "15 Mar 2024 - 20 Apr 2024",
-  //     address: "123 Green Street Eco Building Singapore 567890",
-  //     image: "https://nextui.org/images/hero-card-complete.jpeg",
-  //   },
-  //   {
-  //     title: "Tech for Good",
-  //     date: "01 May 2024 - 31 May 2024",
-  //     address: "456 Innovation Road Tech Hub Singapore 123456",
-  //     image: "https://nextui.org/images/hero-card-complete.jpeg",
-  //   },
-  //   {
-  //     title: "Art for All",
-  //     date: "01 Sep 2024 - 30 Sep 2024",
-  //     address: "78 Creative Avenue Art Center Singapore 789012",
-  //     image: "https://nextui.org/images/hero-card-complete.jpeg",
-  //   },
-  //   {
-  //     title: "Health Matters",
-  //     date: "10 Oct 2024 - 20 Oct 2024",
-  //     address: "89 Wellness Boulevard Health Complex Singapore 345678",
-  //     image: "https://nextui.org/images/hero-card-complete.jpeg",
-  //   },
-  //   {
-  //     title: "Music & Melody",
-  //     date: "05 Nov 2024 - 15 Nov 2024",
-  //     address: "101 Harmony Lane Music Hall Singapore 234567",
-  //     image: "https://nextui.org/images/hero-card-complete.jpeg",
-  //   },
-  // ];
+  if (cardData.length === 0) {
+    return <div>Loading...</div>;
+  }
 
   const words = ["Volunteering,", "Helping,", "Supporting,"];
 
@@ -143,11 +104,11 @@ const HomePage = () => {
           <div className="embla">
             <div className="embla__viewport p-4" ref={emblaRef}>
               <div className="embla__container">
-                {/* {testData.map((card) => (
-                  <div className="embla__slide flex">
+                {cardData.map((card) => (
+                  <div className="embla__slide flex" key={card.title}>
                     <OppCards {...card} />
                   </div>
-                ))} */}
+                ))}
               </div>
             </div>
 

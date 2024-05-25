@@ -24,8 +24,9 @@ interface Opportunity {
   venue: string;
   registrationOpen: firebase.firestore.Timestamp;
   image: string;
-  organizer: string;
+  company: string;
   description: string;
+  category: string;
 }
 
 
@@ -116,13 +117,14 @@ const InfoPage = () => {
             <p className="md:text-4xl text-3xl font-bold text-slate-900">
               {opportunity.name}
             </p>
-            <p className="text-slate-600 font-mono">{opportunity.organizer}</p>
+            <p className="text-slate-400 font-mono">{opportunity.company} | {opportunity.category}</p>
           </div>
           <p className="uppercase text-slate-700 font-semibold">
             {moment(opportunity.datetimeStart.toDate()).format('MMMM Do YYYY')} - {moment(opportunity.datetimeEnd.toDate()).format('MMMM Do YYYY')}
           </p>
         </div>
 
+      
         <div>
           <p className="text-3xl font-bold pb-2 text-slate-700">About</p>
           <p className="ml-1 border-l-3 outline-offset-3 px-4 border-slate-700">

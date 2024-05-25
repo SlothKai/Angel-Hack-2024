@@ -33,8 +33,7 @@ const HomePage = () => {
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi);
 
-
-    const [cardData, setCardData] = useState<OppCardsProps[]>([]);
+  const [cardData, setCardData] = useState<OppCardsProps[]>([]);
 
     const getQuerySnapshot = async () => {
       try {
@@ -110,7 +109,6 @@ const HomePage = () => {
                     <OppCards {...card} />
                   </div>
                 ))}
-            
               </div>
             </div>
 

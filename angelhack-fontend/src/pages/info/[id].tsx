@@ -7,6 +7,7 @@ import {
   TableRow,
   getKeyValue,
   Image,
+  Link,
 } from "@nextui-org/react";
 import clsx from "clsx";
 import { useRouter } from "next/router";
@@ -50,15 +51,15 @@ const InfoPage = () => {
         <div className="mx-auto shadow-xl">
           <Image
             src="https://www.volunteer.gov.sg/images/default-source/opportunity/9c8e85de-d0ba-4999-9cb5-5013c0f34f9e.jpg?Status=Master&sfvrsn=4e2d8906_1"
-            width={800}
-            height={400}
+            width={700}
+            height={300}
             alt="Green Earth Initiative"
           />
         </div>
 
         <div
           className={clsx(
-            "flex flex-wrap justify-between items-center pr-4 sticky top-[64px] z-10 py-2 bg-white "
+            "flex flex-wrap justify-between items-center pr-4 sticky top-[64px] z-10 py-2 bg-white"
           )}
         >
           <div>
@@ -74,7 +75,7 @@ const InfoPage = () => {
 
         <div>
           <p className="text-3xl font-bold pb-2 text-slate-700">About</p>
-          <p className="border-l-3 px-4 border-slate-700">
+          <p className="ml-1 border-l-3 outline-offset-3 px-4 border-slate-700">
             Are you ready to combine your love for photography with a passion
             for the environment? Organised to commemorate World Environment Day
             2024, join us on a captivating journey! Date: 8 June (Saturday)
@@ -164,6 +165,12 @@ const InfoPage = () => {
             </TableBody>
           </Table>
         </div>
+        <Link
+          className="w-fit inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
+          href="#"
+        >
+          Apply
+        </Link>
       </div>
     </>
   );

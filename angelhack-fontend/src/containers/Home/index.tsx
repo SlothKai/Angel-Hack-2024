@@ -40,7 +40,7 @@ const HomePage = () => {
         const querySnapshot = await getDocs(collection(db, "opportunities"));
         const data = querySnapshot.docs.map(doc => ({
           title: doc.get('name'),
-          date: moment(doc.get('datetimeStart').toDate()).format('MMMM Do YYYY, h:mm:ss a'),
+          date: moment(doc.get('datetimeStart').toDate()).format('MMMM Do YYYY, h:mm a'),
           address: doc.get('venue'),
           image: doc.get('image'),
           id: doc.id,
@@ -92,6 +92,7 @@ const HomePage = () => {
             // src="/placeholder.svg"
             src="https://images.unsplash.com/photo-1628717341663-0007b0ee2597?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             width="550"
+           
           />
         </div>
 

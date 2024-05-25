@@ -1,5 +1,6 @@
-import { Button, Card, CardBody, CardHeader, Image, Link } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Link } from "@nextui-org/react";
 import React from "react";
+import Image from "next/image";
 
 export interface OppCardsProps {
   id: string;
@@ -15,14 +16,19 @@ const OppCards: React.FC<OppCardsProps> = ({ id, title, date, address, image }) 
       <Link href={`/info/${id}`}>
     <Card className="flex items-center justify-center w-[235px]">
       <CardHeader className="flex pb-0 pt-2 px-4 flex-col items-start">
+
         <Image
           alt="Card background"
-          className="object-cover rounded-xl"
+          className="object-cover rounded-xl max-w-[270px]"
           src={
             image ? image : `https://nextui.org/images/hero-card-complete.jpeg`
           }
-          width={270}
+          layout="fill"
+          // width={235} // Enforce a fixed width
+          // height={180} // Enforce a fixed height
+          
         />
+
         
           {/* <Button>View Details</Button> */}
         

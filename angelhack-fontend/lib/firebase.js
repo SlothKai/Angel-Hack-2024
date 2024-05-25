@@ -16,13 +16,15 @@ const firebaseConfig = {
   measurementId: "G-F01XECEX14",
 };
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-} else {
-  firebase.app(); // if already initialized, use that one
-}
+const app = firebase.initializeApp(firebaseConfig);
+// if (!firebase.apps.length) {
+//   app = firebase.initializeApp(firebaseConfig);
+  
+// } else {
+//   firebase.app(); // if already initialized, use that one
+// }
 
 const auth = firebase.auth();
+const db = getFirestore(app);
 
 export { auth, firebase, db };

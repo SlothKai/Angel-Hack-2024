@@ -64,10 +64,8 @@ const NavBar = () => {
             <>
               <NavbarItem className="flex items-center">
                 <img
-                  src={
-                    currentUser.photoURL || "https://via.placeholder.com/150"
-                  }
-                  src={currentUser.photoURL || "https://c.ndtvimg.com/2024-04/2885brr4_kim-jong-un_625x300_11_April_24.jpeg"}
+                  
+                  src={currentUser.photoURL || "https://i.pravatar.cc/150?u=a04258114e29026708c"}
                   alt="Profile"
                   className="w-8 h-8 rounded-full"
                 />

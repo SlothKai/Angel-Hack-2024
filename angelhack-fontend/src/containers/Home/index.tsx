@@ -43,7 +43,8 @@ const HomePage = () => {
           title: doc.get('name'),
           date: moment(doc.get('datetimeStart').toDate()).format('MMMM Do YYYY, h:mm:ss a'),
           address: doc.get('venue'),
-          image: doc.get('image')
+          image: doc.get('image'),
+          id: doc.id,
         })) as OppCardsProps[];
         setCardData(data);
       } catch (error) {
@@ -105,7 +106,7 @@ const HomePage = () => {
               <div className="embla__container">
                
               {cardData.map((card) => (
-                  <div className="embla__slide flex" key={card.title}>
+                  <div className="embla__slide flex" key={card.id}>
                     <OppCards {...card} />
                   </div>
                 ))}

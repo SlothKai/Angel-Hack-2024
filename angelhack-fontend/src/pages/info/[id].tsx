@@ -45,7 +45,7 @@ const InfoPage = () => {
   const router = useRouter();
   return (
     <>
-      {/* <p>Post: {router.query.id}</p> */}
+      <p>Post: {router.query.id}</p>
       <div className="space-y-8 flex flex-col justify-center">
         <div className="mx-auto shadow-xl">
           <Image

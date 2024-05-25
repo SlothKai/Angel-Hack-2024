@@ -19,7 +19,10 @@ const HomePage = () => {
   };
   // const SLIDE_COUNT = 5;
   // const SLIDES = Array.from(Array(SLIDE_COUNT).keys());
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false }, [Autoplay()]);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { align: "start", containScroll: false, slidesToScroll: "auto" },
+    [Autoplay()]
+  );
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -60,7 +63,7 @@ const HomePage = () => {
     return <div>Loading...</div>;
   }
 
-  const words = ["Volunteering,", "Helping,", "Supporting,"];
+  const words = ["Volunteering,", "Aiding,", "Supporting,"];
 
   return (
     <>
@@ -80,7 +83,7 @@ const HomePage = () => {
 
             <Link
               className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-              href="#"
+              href="/opps"
             >
               Get Started
             </Link>
@@ -93,7 +96,6 @@ const HomePage = () => {
             // src="/placeholder.svg"
             src="https://images.unsplash.com/photo-1628717341663-0007b0ee2597?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             width="550"
-           
           />
         </div>
 

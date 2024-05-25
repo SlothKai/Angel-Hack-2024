@@ -7,8 +7,9 @@ import {
   NavbarItem,
 } from "@nextui-org/react";
 
+import { User, onAuthStateChanged, signOut } from "firebase/auth";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
-import { User, getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { auth } from "../../../lib/firebase";
 
@@ -32,17 +33,26 @@ const NavBar = () => {
     }
   };
 
+  const pathname = usePathname();
+
   return (
     <>
       <Navbar isBlurred={false}>
         <NavbarBrand>
-        <Link href="/">
-          <img src="images/iterLogo.svg" alt="Iter Logo" className="h-14 w-auto" />
-        </Link>
+          <Link href="/">
+            <img
+              src="images/iterLogo.svg"
+              alt="Iter Logo"
+              className="h-14 w-auto"
+            />
+          </Link>
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
           <NavbarItem>
-            <Link color="foreground" href="#">
+            <Link
+              color={pathname === "/opps" ? "primary" : "foreground"}
+              href="/opps"
+            >
               Opportunities
             </Link>
           </NavbarItem>

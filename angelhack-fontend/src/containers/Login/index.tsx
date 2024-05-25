@@ -1,14 +1,11 @@
-import Link from "next/link";
-
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/router";
-import { auth } from "../../../lib/firebase";
 import {
+  browserSessionPersistence,
   getAuth,
   setPersistence,
   signInWithEmailAndPassword,
-  browserSessionPersistence,
 } from "firebase/auth";
+import { useRouter } from "next/router";
+import { FormEvent, useState } from "react";
 
 const LoginContainer = () => {
   const [email, setEmail] = useState<string>("");

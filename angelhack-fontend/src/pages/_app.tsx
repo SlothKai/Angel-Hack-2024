@@ -1,3 +1,4 @@
+import AuthProvider from "@/components/AuthContext";
 import NavBar from "@/components/NavBar";
 import "@/styles/globals.css";
 import { NextUIProvider } from "@nextui-org/react";
@@ -19,10 +20,12 @@ const PageConfig: React.FC<PageConfigProps> = ({ children }) => {
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <NextUIProvider>
-      <NavBar />
-      <PageConfig>
-        <Component {...pageProps} />
-      </PageConfig>
+      <AuthProvider>
+        <NavBar />
+        <PageConfig>
+          <Component {...pageProps} />
+        </PageConfig>
+      </AuthProvider>
     </NextUIProvider>
   );
 }

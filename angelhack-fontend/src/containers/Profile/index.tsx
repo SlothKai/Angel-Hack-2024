@@ -9,6 +9,7 @@ import {
   TableCell,
   getKeyValue,
 } from "@nextui-org/react";
+import React from "react";
 
 interface ProfileContainerProps {
   name: string;
@@ -139,12 +140,14 @@ const ProfileContainer = ({
       <Card className="flex">
         <CardHeader className="text-xl font-bold">Badges</CardHeader>
         <div className="p-3 gap-6 flex flex-wrap justify-around">
-          {badgeData.map((badge) => (
-            <BadgeComponent
-              name={badge.name}
-              description={badge.description}
-              obtained={badge.obtained}
-            />
+          {badgeData.map((badge, index) => (
+            <React.Fragment key={index}>
+              <BadgeComponent
+                name={badge.name}
+                description={badge.description}
+                obtained={badge.obtained}
+              />
+            </React.Fragment>
           ))}
         </div>
       </Card>

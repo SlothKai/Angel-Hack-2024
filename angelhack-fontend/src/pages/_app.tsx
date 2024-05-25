@@ -1,4 +1,3 @@
-
 import NavBar from "@/components/NavBar";
 import "@/styles/globals.css";
 import { NextUIProvider } from "@nextui-org/react";
@@ -12,8 +11,8 @@ interface PageConfigProps {
 
 const PageConfig: React.FC<PageConfigProps> = ({ children }) => {
   return (
-    <div className="min-h-[calc(100vh-64px-32px)]">
-      <div className="mt-8 px-8 max-w-7xl mx-auto pb-96">{children}</div>
+    <div className="pt-8 px-8 bg-gray-100 min-h-[calc(100vh-64px-32px)]">
+      <div className="max-w-7xl mx-auto pb-96 ">{children}</div>
     </div>
   );
 };
@@ -21,12 +20,10 @@ const PageConfig: React.FC<PageConfigProps> = ({ children }) => {
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <NextUIProvider>
-      
-        <NavBar />
-        <PageConfig>
-          <Component {...pageProps} />
-        </PageConfig>
-      
+      <NavBar />
+      <PageConfig>
+        <Component {...pageProps} />
+      </PageConfig>
     </NextUIProvider>
   );
 }

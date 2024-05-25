@@ -113,7 +113,7 @@ const InfoPage = () => {
 
         <div
           className={clsx(
-            "flex flex-wrap justify-between items-center pr-4 sticky top-[64px] z-10 py-2 bg-white"
+            "flex flex-wrap justify-between items-center pr-4 sticky top-[64px] z-10 py-2 bg-gray-100"
           )}
         >
           <div>

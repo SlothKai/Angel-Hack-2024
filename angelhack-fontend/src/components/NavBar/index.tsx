@@ -10,6 +10,8 @@ import {
 import { useRouter } from 'next/router';
 import { User, getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { useEffect, useState } from "react";
+import { auth } from '../../../lib/firebase';
+
 
 const NavBar = () => {
 
@@ -64,7 +66,7 @@ const NavBar = () => {
             <>
               <NavbarItem className="flex items-center">
                 <img
-                  src={currentUser.photoURL || "https://via.placeholder.com/150"}
+                  src={currentUser.photoURL || "https://c.ndtvimg.com/2024-04/2885brr4_kim-jong-un_625x300_11_April_24.jpeg"}
                   alt="Profile"
                   className="w-8 h-8 rounded-full"
                 />

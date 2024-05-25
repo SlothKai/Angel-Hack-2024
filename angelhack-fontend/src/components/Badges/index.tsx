@@ -14,12 +14,14 @@ interface BadgeComponentProps {
   name: string;
   description: string;
   obtained: boolean;
+  image: string;
 }
 
 const BadgeComponent: React.FC<BadgeComponentProps> = ({
   name,
   description,
   obtained,
+  image
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -35,7 +37,7 @@ const BadgeComponent: React.FC<BadgeComponentProps> = ({
         }}
       >
         <Avatar
-          src="https://i.pravatar.cc/150?u=a04258114e29026708c"
+          src={image}
           className="w-24 h-24  shrink-0"
           isDisabled={!obtained}
         />
@@ -48,7 +50,7 @@ const BadgeComponent: React.FC<BadgeComponentProps> = ({
             <>
               <ModalHeader className="flex flex-col gap-1 justify-center items-center">
                 <Avatar
-                  src="https://i.pravatar.cc/150?u=a04258114e29026708c"
+                  src={image}
                   className="w-24 h-24 text-large shrink-0"
                   isDisabled={!obtained}
                 />

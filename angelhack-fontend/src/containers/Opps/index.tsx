@@ -4,6 +4,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { db } from "../../../lib/firebase";
 import OppCardsNoCarou from "@/components/OppCardsNoCarou";
+import { Spinner } from "@nextui-org/react";
 
 interface OppsContainerProps {}
 
@@ -33,7 +34,14 @@ const OppsContainer: React.FC<OppsContainerProps> = () => {
   }, []);
 
   if (cardData.length === 0) {
-    return <div>Loading...</div>;
+    // return <div>Loading...</div>;
+    return (
+      <>
+        <div className="flex justify-center items-center">
+          <Spinner />
+        </div>
+      </>
+    );
   }
   return (
     <div className="">

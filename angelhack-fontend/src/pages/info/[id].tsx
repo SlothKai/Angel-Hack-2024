@@ -2,6 +2,7 @@ import {
   Button,
   Image,
   Link,
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -60,7 +61,14 @@ const InfoPage = () => {
   }, [router.query.id]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    // return <div>Loading...</div>;
+    return (
+      <>
+        <div className="flex justify-center items-center">
+          <Spinner />
+        </div>
+      </>
+    );
   }
 
   if (!opportunity) {
@@ -118,10 +126,9 @@ const InfoPage = () => {
             alt={opportunity.name}
           />
         </div>
-
         <div
           className={clsx(
-            "flex flex-wrap justify-between items-center pr-4 sticky top-[64px] z-10 py-2 bg-gray-100"
+            "flex flex-wrap justify-between items-center pr-4 sticky top-[64px] z-10 py-2 bg-gray-100/70 backdrop-blur-xl"
           )}
         >
           <div>
@@ -137,36 +144,69 @@ const InfoPage = () => {
             - {moment(opportunity.datetimeEnd.toDate()).format("MMMM Do YYYY")}
           </p>
         </div>
-
         <div>
           <p className="text-3xl font-bold pb-2 text-slate-700">About</p>
           <p className="ml-1 border-l-3 outline-offset-3 px-4 border-slate-700">
             {opportunity.description}
           </p>
         </div>
-
         <div>
           <p className="text-3xl font-bold pb-2 text-slate-700">
             Additional Information
           </p>
 
-          <Table aria-label="Example table with dynamic content">
-            <TableHeader columns={columns}>
-              {(column) => (
-                <TableColumn key={column.key}>{column.label}</TableColumn>
-              )}
-            </TableHeader>
-            <TableBody items={rows}>
-              {(item) => (
-                <TableRow key={item.key}>
-                  {(columnKey) => (
-                    <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-                  )}
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          <div className="hidden md:block">
+            <Table aria-label="Example table with dynamic content">
+              <TableHeader columns={columns}>
+                {(column) => (
+                  <TableColumn key={column.key}>{column.label}</TableColumn>
+                )}
+              </TableHeader>
+              <TableBody items={rows}>
+                {(item) => (
+                  <TableRow key={item.key}>
+                    {(columnKey) => (
+                      <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                    )}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="md:hidden flex flex-wrap xs:gap-7 sm:gap-6">
+            <div>
+              <p className="text-xl font-bold pb-2 text-slate-700">Date</p>
+              <p className=" border-slate-700">
+                {moment(opportunity.datetimeStart.toDate()).format(
+                  "MMMM Do YYYY"
+                )}
+              </p>
+            </div>
+            <div>
+              <p className="text-xl font-bold pb-2 text-slate-700">Time</p>
+              <p className=" border-slate-700">
+                {moment(opportunity.datetimeStart.toDate()).format("h:mm a") +
+                  " to " +
+                  moment(opportunity.datetimeEnd.toDate()).format("h:mm a")}
+              </p>
+            </div>
+            <div>
+              <p className="text-xl font-bold pb-2 text-slate-700">Location</p>
+              <p className=" border-slate-700">{opportunity.venue}</p>
+            </div>
+            <div>
+              <p className="text-xl font-bold pb-2 text-slate-700">
+                Registration opens
+              </p>
+              <p className=" border-slate-700">
+                {moment(opportunity.datetimeStart.toDate()).format(
+                  "MMMM Do YYYY"
+                )}
+              </p>
+            </div>
+          </div>
         </div>
+
         <Link
           className="w-fit inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
           href="#"

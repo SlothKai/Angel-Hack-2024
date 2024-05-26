@@ -143,7 +143,7 @@ const ProfileContainer = ({
               <div className="hidden sm:block">
                 <p className="text-slate-800 font-semibold">Skills:</p>
                 <p className="text-slate-800 ml-auto">
-                  Compassionate, patient, friendly
+                  Sign Language, Tutoring, Counselling
                 </p>
               </div>
             </div>

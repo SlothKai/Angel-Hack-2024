@@ -5,7 +5,7 @@ let interval: any;
 
 export const FlipWords = ({
   words,
-  duration = 5000,
+  duration = 4000,
   className,
 }: {
   words: string[];

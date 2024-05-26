@@ -9,7 +9,19 @@ import { collection, getDocs } from "firebase/firestore";
 import moment from "moment";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { db } from "../../../lib/firebase";
+import { db, auth } from "../../../lib/firebase";
+import { onAuthStateChanged, User } from "firebase/auth";
+
+interface Opportunity {
+  id: string;
+  category: string;
+  company: string;
+  currentVolunteer: number;
+  maxVolunteer: number;
+  description: string;
+  requiredSkills: number[];
+  score?: number;
+}
 
 const HomePage = () => {
   const OPTIONS: EmblaOptionsType = {
@@ -33,6 +45,37 @@ const HomePage = () => {
     useDotButton(emblaApi);
 
   const [cardData, setCardData] = useState<OppCardsProps[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  
+  const fetchOpportunities = async (userId: string) => {
+    try {
+      const res = await fetch(`/api/recommendations?userId=${userId}`);
+      const data = await res.json();
+      setCardData(data.map((doc: Opportunity) => ({
+        title: doc.category,
+        date: moment().format("MMMM Do YYYY, h:mm:ss a"), // Mocked date
+        address: doc.company,
+        image: "https://via.placeholder.com/150", // Mocked image
+        id: doc.id,
+      })));
+    } catch (error) {
+      console.error("Error fetching recommendations: ", error);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        fetchOpportunities(currentUser.uid);
+      } else {
+        setUser(null);
+        getQuerySnapshot();
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const getQuerySnapshot = async () => {
     try {

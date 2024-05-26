@@ -4,10 +4,10 @@
 
 [Check out our website!](iter.owenlee.net)
 
-<ins>#### Login details</ins>
+#### Login details
 
 id: test@test.com
-<br>pw: 123456<br>
+pw: 123456
 
 As part of Angel Hack 2024, our team created and started Project Iter, a one stop volunteering search portal equipped with gamification features to encourage users to continue giving back and contributing to society!
 

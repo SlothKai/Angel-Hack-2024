@@ -1,4 +1,7 @@
 import {
+  Button,
+  Image,
+  Link,
   Table,
   TableBody,
   TableCell,
@@ -6,15 +9,14 @@ import {
   TableHeader,
   TableRow,
   getKeyValue,
-  Image,
-  Link,
 } from "@nextui-org/react";
 import clsx from "clsx";
-import { useRouter } from "next/router";
-import { db, auth, firebase } from "../../../lib/firebase";
-import { collection, doc, setDoc, getDocs, getDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import moment from "moment";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { db, firebase } from "../../../lib/firebase";
+import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 
 // Define the structure of your Firestore documents
 interface Opportunity {
@@ -102,6 +104,12 @@ const InfoPage = () => {
   return (
     <>
       <div className="space-y-8 flex flex-col justify-center">
+        <Link href="/">
+          <Button color="primary" variant="light" className="w-fit">
+            <ArrowLeftIcon className="w-6 h-6 mr-2" />
+            Back
+          </Button>
+        </Link>
         <div className="mx-auto shadow-xl">
           <Image
             src={opportunity.image}

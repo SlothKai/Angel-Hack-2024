@@ -16,8 +16,9 @@ import { doc, getDoc } from "firebase/firestore";
 import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { db, firebase } from "../../../lib/firebase";
+import { db, firebase, auth } from "../../../lib/firebase";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
+import { onAuthStateChanged, User } from "firebase/auth";
 
 // Define the structure of your Firestore documents
 interface Opportunity {
@@ -36,6 +37,15 @@ const InfoPage = () => {
   const router = useRouter();
   const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (router.query.id) {
@@ -108,6 +118,32 @@ const InfoPage = () => {
       label: "REGISTRATION",
     },
   ];
+
+  const applyForOpportunity = async () => {
+
+    if (user) {
+      try {
+        const response = await fetch("https://applyevents-vwc6whnw4a-as.a.run.app", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ eventId: router.query.id, userId: user.uid }),
+        });
+
+        if (response.ok) {
+          alert("Successfully applied!")
+          setTimeout(() => setAlertMessage(""), 3000);
+        } else {
+          console.error("Error applying for the event");
+        }
+      } catch (error) {
+        console.error("Error applying for the event:", error);
+      }
+    } else {
+      router.push("/login"); // Redirect to login if user is not logged in
+    }
+  };
 
   return (
     <>
@@ -209,13 +245,20 @@ const InfoPage = () => {
 
         <Link
           className="w-fit inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-          href="#"
+          onClick={()=>{
+            console.log("Test")
+            applyForOpportunity()
+          }}
         >
           Apply
-        </Link>
+        </button>
       </div>
     </>
   );
 };
 
 export default InfoPage;
+
+function setAlertMessage(arg0: string) {
+  throw new Error("Function not implemented.");
+}

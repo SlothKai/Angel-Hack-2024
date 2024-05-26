@@ -120,19 +120,24 @@ const InfoPage = () => {
   ];
 
   const applyForOpportunity = async () => {
-
     if (user) {
       try {
-        const response = await fetch("https://applyevents-vwc6whnw4a-as.a.run.app", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ eventId: router.query.id, userId: user.uid }),
-        });
+        const response = await fetch(
+          "https://applyevents-vwc6whnw4a-as.a.run.app",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              eventId: router.query.id,
+              userId: user.uid,
+            }),
+          }
+        );
 
         if (response.ok) {
-          alert("Successfully applied!")
+          alert("Successfully applied!");
           setTimeout(() => setAlertMessage(""), 3000);
         } else {
           console.error("Error applying for the event");
@@ -243,11 +248,10 @@ const InfoPage = () => {
           </div>
         </div>
 
-        <Link
+        <button
           className="w-fit inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-          onClick={()=>{
-            console.log("Test")
-            applyForOpportunity()
+          onClick={() => {
+            applyForOpportunity();
           }}
         >
           Apply

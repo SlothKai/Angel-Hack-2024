@@ -1,7 +1,7 @@
 import { useDotButton } from "@/components/Carousel/CarouselDots";
 import OppCards, { OppCardsProps } from "@/components/OppCards";
 import { FlipWords } from "@/components/ui/flip-words";
-import { Image } from "@nextui-org/react";
+import { Image, Spinner } from "@nextui-org/react";
 import { EmblaOptionsType } from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
@@ -49,18 +49,20 @@ const HomePage = () => {
 
   const [cardData, setCardData] = useState<OppCardsProps[]>([]);
   const [user, setUser] = useState<User | null>(null);
-  
+
   const fetchOpportunities = async (userId: string) => {
     try {
       const res = await fetch(`/api/recommendations?userId=${userId}`);
       const data = await res.json();
-      setCardData(data.map((doc: Opportunity) => ({
-        title: doc.category,
-        date: moment().format("MMMM Do YYYY, h:mm:ss a"), // Mocked date
-        address: doc.company,
-        image: "https://via.placeholder.com/150", // Mocked image
-        id: doc.id,
-      })));
+      setCardData(
+        data.map((doc: Opportunity) => ({
+          title: doc.category,
+          date: moment().format("MMMM Do YYYY, h:mm:ss a"), // Mocked date
+          address: doc.company,
+          image: "https://via.placeholder.com/150", // Mocked image
+          id: doc.id,
+        }))
+      );
     } catch (error) {
       console.error("Error fetching recommendations: ", error);
     }
@@ -103,7 +105,13 @@ const HomePage = () => {
   }, []);
 
   if (cardData.length === 0) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <div className="flex justify-center items-center">
+          <Spinner />
+        </div>
+      </>
+    );
   }
 
   const words = ["Volunteering,", "Aiding,", "Supporting,"];

@@ -64,3 +64,41 @@ exports.getUsers = onRequest(
     }
   }
 );
+
+exports.applyEvents = onRequest(
+  {
+    region: "asia-southeast1",
+  },
+  async (request, response) => {
+    try {
+      // Set CORS headers
+      response.set('Access-Control-Allow-Origin', '*');
+      response.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+      response.set('Access-Control-Allow-Headers', 'Content-Type');
+
+      // Handle preflight requests
+      if (request.method === 'OPTIONS') {
+        response.status(204).send('');
+        return;
+      }
+
+      const { eventId, userId } = request.body;
+
+      if (!eventId || !userId) {
+        response.status(400).send("Missing eventId or userId");
+        return;
+      }
+
+      // Add event and user ID to Firestore
+      await db.collection('eventsRegister').add({
+        eventId,
+        userId
+      });
+
+      response.status(200);
+    } catch (error) {
+      console.error("Error adding user to event:", error);
+      response.status(500);
+    }
+  }
+);

@@ -12,7 +12,9 @@ Singapore's high digital connectivity and active society are assets. Create a si
 
 ## Solution
 
-Iter, latin for 'journey' aims to encourage users to continue signing up for volunteering opportunities by gamifying their volunteer experience. By gamifying the volunteer experience, it motivates users to continuously sign up for activities. Features like point systems and badges make volunteering fun and rewarding. This method increases civic involvement and reinforces social bonds by cultivating a more engaged and interconnected community.
+Iter, latin for 'journey' aims to encourage users to continue signing up for volunteering opportunities by gamifying their volunteer experience. By gamifying the volunteer experience, it motivates users to continuously sign up for activities. Features like point systems and badges make volunteering fun and rewarding. Iter provides personlized volunteer recommendations as well to make it easier for citizens to discover and get involved in volunteer roles that matches them. 
+
+This method increases civic involvement and reinforces social bonds by cultivating a more engaged and interconnected community.
 
 ## Main Functionaliities
 

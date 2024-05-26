@@ -1,4 +1,3 @@
-// utils/recommendations.ts
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebase';
 
@@ -23,6 +22,10 @@ const cosineSimilarity = (vecA: number[], vecB: number[]): number => {
 export const getRecommendations = async (userId: string): Promise<Opportunity[]> => {
   const userDoc = await getDoc(doc(db, 'users', userId));
   const userSkills: number[] = userDoc.data()?.skills;
+
+  if (!userSkills) {
+    throw new Error('User skills not found');
+  }
 
   const opportunitiesSnapshot = await getDocs(collection(db, 'opportunities'));
   const opportunities: Opportunity[] = opportunitiesSnapshot.docs.map(doc => ({

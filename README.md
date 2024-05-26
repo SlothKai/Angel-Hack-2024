@@ -27,6 +27,7 @@ This method increases civic involvement and reinforces social bonds by cultivati
 
 1. Bulletin Board to easily search for volunteer opportunities.
 2. User dashboard to view their hard earned badges and redeem rewards.
+3. A ML Model to recommend opportunities to users.
 
 ## Target Audience
 

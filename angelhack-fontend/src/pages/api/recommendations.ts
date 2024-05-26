@@ -14,5 +14,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(200).json(recommendations);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch recommendations' });
+    
   }
 }

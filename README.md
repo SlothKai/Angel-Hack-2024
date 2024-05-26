@@ -2,7 +2,7 @@
 
 ## About
 
-[Check out our website!](iter.owenlee.net)
+Check out our website! - iter.owenlee.net
 
 #### Login details
 

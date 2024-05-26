@@ -15,8 +15,10 @@ const SignUpContainer = () => {
     setLoading(true);
     setError("");
 
+
     try {
       await auth.createUserWithEmailAndPassword(email, password);
+      
       router.push("/login");
     } catch (error) {
       setError((error as Error).message);

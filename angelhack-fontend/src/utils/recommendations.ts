@@ -12,19 +12,16 @@ interface Opportunity {
   score?: number;
 }
 
-const cosineSimilarity = (vecA: number[], vecB: number[]): number => {
-  const dotProduct = vecA.reduce((acc, val, i) => acc + val * vecB[i], 0);
-  const normA = Math.sqrt(vecA.reduce((acc, val) => acc + val * val, 0));
-  const normB = Math.sqrt(vecB.reduce((acc, val) => acc + val * val, 0));
-  return dotProduct / (normA * normB);
+const skillMatch = (userSkill: number, requiredSkills: number[]): number => {
+  return requiredSkills.includes(userSkill) ? 1 : 0;
 };
 
 export const getRecommendations = async (userId: string): Promise<Opportunity[]> => {
   const userDoc = await getDoc(doc(db, 'users', userId));
-  const userSkills: number[] = userDoc.data()?.skills;
+  const userSkill: number = userDoc.data()?.skill;
 
-  if (!userSkills) {
-    throw new Error('User skills not found');
+  if (userSkill === undefined || userSkill < 1 || userSkill > 3) {
+    throw new Error('User skill not found or invalid');
   }
 
   const opportunitiesSnapshot = await getDocs(collection(db, 'opportunities'));
@@ -34,8 +31,8 @@ export const getRecommendations = async (userId: string): Promise<Opportunity[]>
   })) as Opportunity[];
 
   const recommendations = opportunities.map(opportunity => {
-    const similarityScore = cosineSimilarity(userSkills, opportunity.requiredSkills);
-    return { ...opportunity, score: similarityScore };
+    const matchScore = skillMatch(userSkill, opportunity.requiredSkills);
+    return { ...opportunity, score: matchScore };
   });
 
   return recommendations.sort((a, b) => b.score! - a.score!);

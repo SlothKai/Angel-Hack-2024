@@ -11,27 +11,12 @@ import { User, onAuthStateChanged, signOut } from "firebase/auth";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { auth } from "../../../lib/firebase";
 
 const NavBar = () => {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-    });
-    return () => unsubscribe();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      router.push("/login");
-    } catch (error) {
-      console.error("Error signing out: ", error);
-    }
-  };
+  const handleLogout = async () => {};
 
   const pathname = usePathname();
 
@@ -58,38 +43,26 @@ const NavBar = () => {
           </NavbarItem>
         </NavbarContent>
         <NavbarContent justify="end">
-          {currentUser ? (
-            <>
-              <NavbarItem className="flex items-center">
-                <Link href="/profile">
-                  <img
-                    src={
-                      currentUser.photoURL ||
-                      "https://i.pravatar.cc/150?u=a04258114e29026708c"
-                    }
-                    alt="Profile"
-                    className="w-8 h-8 rounded-full"
-                  />
-                </Link>
-              </NavbarItem>
-              <NavbarItem>
-                <Button onClick={handleLogout} color="primary" variant="flat">
-                  Sign Out
-                </Button>
-              </NavbarItem>
-            </>
-          ) : (
-            <>
-              <NavbarItem className="flex">
-                <Link href="/login">Login</Link>
-              </NavbarItem>
-              <NavbarItem>
-                <Button as={Link} color="primary" href="/signup" variant="flat">
-                  Sign Up
-                </Button>
-              </NavbarItem>
-            </>
-          )}
+          {/* {currentUser ? ( */}
+          <>
+            <NavbarItem className="flex items-center">
+              <Link href="/profile">
+                <img
+                  src={
+                    // currentUser.photoURL ||
+                    "https://i.pravatar.cc/150?u=a04258114e29026708c"
+                  }
+                  alt="Profile"
+                  className="w-8 h-8 rounded-full"
+                />
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Button onClick={handleLogout} color="primary" variant="flat">
+                Sign Out
+              </Button>
+            </NavbarItem>
+          </>
         </NavbarContent>
       </Navbar>
     </>

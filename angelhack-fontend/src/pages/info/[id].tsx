@@ -1,3 +1,5 @@
+import { detailedOops } from "@/fetchers";
+import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import {
   Button,
   Image,
@@ -11,94 +13,51 @@ import {
   TableRow,
   getKeyValue,
 } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { doc, getDoc } from "firebase/firestore";
 import moment from "moment";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { db, firebase, auth } from "../../../lib/firebase";
-import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { onAuthStateChanged, User } from "firebase/auth";
 
-// Define the structure of your Firestore documents
-interface Opportunity {
-  name: string;
-  datetimeStart: firebase.firestore.Timestamp;
-  datetimeEnd: firebase.firestore.Timestamp;
-  venue: string;
-  registrationOpen: firebase.firestore.Timestamp;
-  image: string;
-  company: string;
-  description: string;
-  category: string;
+interface IRows {
+  key: string;
+  date: string;
+  time: string;
+  location: string;
+  register_open: string;
 }
+
+interface ITime {
+  seconds: number;
+  nanoseconds: number;
+}
+
+let rows: IRows[];
+
+const convertDateToString = (timestamp: ITime) => {
+  const date = new Date(timestamp.seconds * 1000);
+  return moment(date).format("MMMM Do YYYY");
+};
+
+const convertToTime = (timestamp: ITime) => {
+  const date = new Date(timestamp.seconds * 1000);
+  return moment(date).format("h:mm a");
+};
 
 const InfoPage = () => {
   const router = useRouter();
-  const [opportunity, setOpportunity] = useState<Opportunity | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (router.query.id) {
-      const getOpportunity = async () => {
-        try {
-          const docRef = doc(db, "opportunities", router.query.id as string);
-          const docSnap = await getDoc(docRef);
-
-          if (docSnap.exists()) {
-            setOpportunity(docSnap.data() as Opportunity);
-          } else {
-            console.log("No such document!");
-          }
-        } catch (error) {
-          console.error("Error fetching document:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      getOpportunity();
-    }
-  }, [router.query.id]);
-
-  if (loading) {
-    // return <div>Loading...</div>;
-    return (
-      <>
-        <div className="flex justify-center items-center">
-          <Spinner />
-        </div>
-      </>
-    );
-  }
-
-  if (!opportunity) {
-    return <div>No data found</div>;
-  }
-
-  const rows = [
-    {
-      key: "date",
-      date: moment(opportunity.datetimeStart.toDate()).format("MMMM Do YYYY"),
-      time:
-        moment(opportunity.datetimeStart.toDate()).format("h:mm a") +
-        " to " +
-        moment(opportunity.datetimeEnd.toDate()).format("h:mm a"),
-      location: opportunity.venue,
-      register_open: moment(opportunity.datetimeStart.toDate()).format(
-        "MMMM Do YYYY"
-      ),
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["detailedOops", router.query.id],
+    queryFn: async () => {
+      if (typeof router.query.id === "string") {
+        return await detailedOops(router.query.id);
+      } else {
+        throw new Error("Invalid id");
+      }
     },
-  ];
+    initialData: [],
+    retry: 1,
+  });
 
   const columns = [
     {
@@ -119,36 +78,31 @@ const InfoPage = () => {
     },
   ];
 
-  const applyForOpportunity = async () => {
-    if (user) {
-      try {
-        const response = await fetch(
-          "https://applyevents-vwc6whnw4a-as.a.run.app",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              eventId: router.query.id,
-              userId: user.uid,
-            }),
-          }
-        );
+  if (data.length !== 0) {
+    rows = [
+      {
+        key: data.id,
+        date: convertDateToString(data.datetimeStart),
+        time: `${convertToTime(data.datetimeStart)} - ${convertToTime(
+          data.datetimeEnd
+        )}`,
+        location: data.venue,
+        register_open: convertDateToString(data.datetimeStart),
+      },
+    ];
+  }
 
-        if (response.ok) {
-          alert("Successfully applied!");
-          setTimeout(() => setAlertMessage(""), 3000);
-        } else {
-          console.error("Error applying for the event");
-        }
-      } catch (error) {
-        console.error("Error applying for the event:", error);
-      }
-    } else {
-      router.push("/login"); // Redirect to login if user is not logged in
-    }
-  };
+  if (isError) {
+    return <div className="flex justify-center items-center">Invalid ID.</div>;
+  }
+
+  if (isLoading || data.length === 0) {
+    return (
+      <div className="flex justify-center items-center">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -160,35 +114,31 @@ const InfoPage = () => {
           </Button>
         </Link>
         <div className="mx-auto shadow-xl">
-          <Image
-            src={opportunity.image}
-            width={700}
-            height={300}
-            alt={opportunity.name}
-          />
+          <Image src={data.image} width={700} height={300} alt={data.name} />
         </div>
         <div
           className={clsx(
-            "flex flex-wrap justify-between items-center pr-4 sticky top-[64px] z-10 py-2 bg-gray-100/70 backdrop-blur-xl"
+            "flex flex-wrap justify-between items-center pr-4 sticky top-[64px] z-10 py-2 bg-gray-100"
           )}
         >
           <div>
             <p className="md:text-4xl text-3xl font-bold text-slate-900">
-              {opportunity.name}
+              {data.name}
             </p>
             <p className="text-slate-400 font-mono">
-              {opportunity.company} | {opportunity.category}
+              {data.company} | {data.category}
             </p>
           </div>
           <p className="uppercase text-slate-700 font-semibold">
-            {moment(opportunity.datetimeStart.toDate()).format("MMMM Do YYYY")}{" "}
-            - {moment(opportunity.datetimeEnd.toDate()).format("MMMM Do YYYY")}
+            {`${convertDateToString(
+              data.datetimeStart
+            )} - ${convertDateToString(data.datetimeEnd)}`}
           </p>
         </div>
         <div>
           <p className="text-3xl font-bold pb-2 text-slate-700">About</p>
           <p className="ml-1 border-l-3 outline-offset-3 px-4 border-slate-700">
-            {opportunity.description}
+            {data.description}
           </p>
         </div>
         <div>
@@ -218,31 +168,27 @@ const InfoPage = () => {
             <div>
               <p className="text-xl font-bold pb-2 text-slate-700">Date</p>
               <p className=" border-slate-700">
-                {moment(opportunity.datetimeStart.toDate()).format(
-                  "MMMM Do YYYY"
-                )}
+                {convertDateToString(data.datetimeStart)}
               </p>
             </div>
             <div>
               <p className="text-xl font-bold pb-2 text-slate-700">Time</p>
               <p className=" border-slate-700">
-                {moment(opportunity.datetimeStart.toDate()).format("h:mm a") +
-                  " to " +
-                  moment(opportunity.datetimeEnd.toDate()).format("h:mm a")}
+                {`${convertToTime(data.datetimeStart)} - ${convertToTime(
+                  data.datetimeEnd
+                )}`}
               </p>
             </div>
             <div>
               <p className="text-xl font-bold pb-2 text-slate-700">Location</p>
-              <p className=" border-slate-700">{opportunity.venue}</p>
+              <p className=" border-slate-700">{data.venue}</p>
             </div>
             <div>
               <p className="text-xl font-bold pb-2 text-slate-700">
                 Registration opens
               </p>
               <p className=" border-slate-700">
-                {moment(opportunity.datetimeStart.toDate()).format(
-                  "MMMM Do YYYY"
-                )}
+                {convertDateToString(data.datetimeStart)}
               </p>
             </div>
           </div>
@@ -250,9 +196,7 @@ const InfoPage = () => {
 
         <button
           className="w-fit inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50"
-          onClick={() => {
-            applyForOpportunity();
-          }}
+          onClick={() => {}}
         >
           Apply
         </button>

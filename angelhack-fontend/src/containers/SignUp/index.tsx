@@ -1,7 +1,6 @@
 // pages/register.tsx
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/router";
-import { auth } from "../../../lib/firebase";
 
 const SignUpContainer = () => {
   const [email, setEmail] = useState<string>("");
@@ -15,16 +14,15 @@ const SignUpContainer = () => {
     setLoading(true);
     setError("");
 
+    // try {
+    //   await auth.createUserWithEmailAndPassword(email, password);
 
-    try {
-      await auth.createUserWithEmailAndPassword(email, password);
-      
-      router.push("/login");
-    } catch (error) {
-      setError((error as Error).message);
-    } finally {
-      setLoading(false);
-    }
+    //   router.push("/login");
+    // } catch (error) {
+    //   setError((error as Error).message);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (

@@ -1,27 +1,14 @@
 import { useDotButton } from "@/components/Carousel/CarouselDots";
 import OppCards, { OppCardsProps } from "@/components/OppCards";
 import { FlipWords } from "@/components/ui/flip-words";
+import { getOpportunities } from "@/fetchers";
 import { Image, Spinner } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
 import { EmblaOptionsType } from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
-import { collection, getDocs } from "firebase/firestore";
-import moment from "moment";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
-import { db, auth } from "../../../lib/firebase";
-import { onAuthStateChanged, User } from "firebase/auth";
-
-interface Opportunity {
-  id: string;
-  category: string;
-  company: string;
-  currentVolunteer: number;
-  maxVolunteer: number;
-  description: string;
-  requiredSkills: number[];
-  score?: number;
-}
+import { useCallback, useState } from "react";
 
 const HomePage = () => {
   const OPTIONS: EmblaOptionsType = {
@@ -47,64 +34,13 @@ const HomePage = () => {
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi);
 
-  const [cardData, setCardData] = useState<OppCardsProps[]>([]);
-  const [user, setUser] = useState<User | null>(null);
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["opportunities"],
+    queryFn: getOpportunities,
+    initialData: [],
+  });
 
-  const fetchOpportunities = async (userId: string) => {
-    try {
-      const res = await fetch(`/api/recommendations?userId=${userId}`);
-      const data = await res.json();
-      setCardData(
-        data.map((doc: Opportunity) => ({
-          title: doc.category,
-          date: moment().format("MMMM Do YYYY, h:mm:ss a"), // Mocked date
-          address: doc.company,
-          image: "https://via.placeholder.com/150", // Mocked image
-          id: doc.id,
-        }))
-      );
-    } catch (error) {
-      console.error("Error fetching recommendations: ", error);
-    }
-  };
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        fetchOpportunities(currentUser.uid);
-      } else {
-        setUser(null);
-        getQuerySnapshot();
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  const getQuerySnapshot = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, "opportunities"));
-      const data = querySnapshot.docs.map((doc) => ({
-        title: doc.get("name"),
-        date: moment(doc.get("datetimeStart").toDate()).format(
-          "MMMM Do YYYY, h:mm:ss a"
-        ),
-        address: doc.get("venue"),
-        image: doc.get("image"),
-        id: doc.id,
-      })) as OppCardsProps[];
-      setCardData(data);
-    } catch (error) {
-      console.error("Error fetching opportunities: ", error);
-    }
-  };
-
-  useEffect(() => {
-    getQuerySnapshot();
-  }, []);
-
-  if (cardData.length === 0) {
+  if (data.length === 0) {
     return (
       <>
         <div className="flex justify-center items-center">
@@ -125,7 +61,6 @@ const HomePage = () => {
               <FlipWords words={words} />
               <br />
               gamified.
-              {/* Volunteering, gamified. */}
             </h1>
             <p className="max-w-[600px] text-gray-500 md:text-xl lg:text-base xl:text-xl">
               Discover how you can make a difference in your community by
@@ -144,7 +79,6 @@ const HomePage = () => {
             alt="Hero"
             className="hidden lg:flex mx-auto aspect-video overflow-hidden rounded-xl object-bottom"
             height="550"
-            // src="/placeholder.svg"
             src="https://images.unsplash.com/photo-1628717341663-0007b0ee2597?q=80&w=1742&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             width="550"
           />
@@ -154,45 +88,40 @@ const HomePage = () => {
           <h1 className="text-2xl font-bold tracking-tighter md:text-3xl/tight pb-3">
             Available Opportunities
           </h1>
+          {isLoading && data.length === 0 ? (
+            <div className="flex justify-center items-center">
+              <Spinner />
+            </div>
+          ) : (
+            <div className="embla">
+              <div className="embla__viewport p-4" ref={emblaRef}>
+                <div className="embla__container">
+                  {data.map((card: OppCardsProps) => (
+                    <div className="embla__slide px-[250px]" key={card.id}>
+                      <OppCards {...card} />
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-          <div className="embla">
-            <div className="embla__viewport p-4" ref={emblaRef}>
-              <div className="embla__container">
-                {cardData.map((card) => (
-                  <div className="embla__slide px-[250px]" key={card.id}>
-                    <OppCards {...card} />
-                  </div>
+              <div className="flex justify-center items-center space-x-3  text-slate-700">
+                {scrollSnaps.map((_, index) => (
+                  <>
+                    <div
+                      className="w-4 h-4 rounded-full border-3 cursor-pointer"
+                      onClick={() => {
+                        onDotButtonClick(index);
+                      }}
+                      style={{
+                        backgroundColor:
+                          index !== selectedIndex ? "" : "#335541",
+                      }}
+                    ></div>
+                  </>
                 ))}
               </div>
             </div>
-
-            <div className="flex justify-center items-center space-x-3  text-slate-700">
-              {scrollSnaps.map((_, index) => (
-                <>
-                  <div
-                    className="w-4 h-4 rounded-full border-3 cursor-pointer"
-                    onClick={() => {
-                      onDotButtonClick(index);
-                    }}
-                    style={{
-                      backgroundColor: index === selectedIndex ? "" : "#335541",
-                      // width: "10px",
-                      // height: "10px",
-                    }}
-                  >
-                    {/* {index} */}
-                  </div>
-                </>
-              ))}
-            </div>
-
-            {/* <button className="embla__prev" onClick={scrollPrev}>
-              Prev
-            </button>
-            <button className="embla__next" onClick={scrollNext}>
-              Next
-            </button> */}
-          </div>
+          )}
         </div>
       </div>
     </>

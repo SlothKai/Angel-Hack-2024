@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "iter",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

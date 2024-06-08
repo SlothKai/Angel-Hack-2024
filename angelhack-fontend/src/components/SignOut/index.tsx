@@ -1,13 +1,12 @@
 // components/SignOut.tsx
 import { useRouter } from "next/router";
-import { auth } from "../../../lib/firebase";
 
 const SignOut: React.FC = () => {
   const router = useRouter();
 
   const handleSignOut = async () => {
-    await auth.signOut();
-    router.push("/login");
+    // await auth.signOut();
+    // router.push("/login");
   };
 
   return (
